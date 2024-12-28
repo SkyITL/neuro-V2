@@ -1,0 +1,21 @@
+llm:
+  type: "llama_cpp"
+  server_url: "http://localhost:8080/completion"
+  max_tokens: 2000
+  temperature: 0.7
+
+speech:
+  tts:
+    provider: "azure"
+    region: "your_region"
+    key: "${AZURE_SPEECH_KEY}"
+    voice_name: "en-US-JennyNeural"
+  
+  stt:
+    provider: "azure"
+    region: "your_region"
+    key: "${AZURE_SPEECH_KEY}"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

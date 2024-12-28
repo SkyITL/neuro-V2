@@ -1,0 +1,29 @@
+voice_chatbot/
+│
+├── config/
+│   └── config.yaml
+│
+├── src/
+│   ├── __init__.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── chat_manager.py
+│   │   └── message.py
+│   │
+│   ├── llm/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   └── llama_cpp.py
+│   │
+│   ├── speech/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── text_to_speech.py
+│   │   └── speech_to_text.py
+│   │
+│   └── utils/
+│       ├── __init__.py
+│       └── logger.py
+│
+├── requirements.txt
+└── main.py

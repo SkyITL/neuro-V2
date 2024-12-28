@@ -1,0 +1,6 @@
+pyyaml
+python-dotenv
+azure-cognitiveservices-speech
+requests
+sounddevice
+numpy
