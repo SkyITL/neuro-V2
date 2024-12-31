@@ -1,18 +1,15 @@
-import os
 import yaml
-from dotenv import load_dotenv
-from src.core.chat_manager import ChatManager
 from src.llm.llama_cpp import LlamaCpp
-from src.speech.text_to_speech import TextToSpeech
-from src.speech.speech_to_text import SpeechToText
+from src.core.chat_manager import ChatManager
+from src.speech.test_tts import TestTTS
+from src.speech.test_stt import TestSTT
 
 def load_config():
     with open("config/config.yaml", "r") as f:
         return yaml.safe_load(f)
 
 def main():
-    # Load environment variables and config
-    load_dotenv()
+    # Load config
     config = load_config()
 
     # Initialize components
@@ -21,34 +18,44 @@ def main():
         max_tokens=config["llm"]["max_tokens"],
         temperature=config["llm"]["temperature"]
     )
+    
+    # Optional: Initialize test speech components
+    tts = TestTTS()
+    stt = TestSTT()
 
-    tts = TextToSpeech(
-        azure_key=os.getenv("AZURE_SPEECH_KEY"),
-        azure_region=config["speech"]["tts"]["region"],
-        voice_name=config["speech"]["tts"]["voice_name"]
-    )
-
-    stt = SpeechToText(
-        azure_key=os.getenv("AZURE_SPEECH_KEY"),
-        azure_region=config["speech"]["stt"]["region"]
-    )
-
-    # Initialize chat manager
+    # Initialize chat manager with all components
     chat_manager = ChatManager(llm, tts, stt)
 
-    print("Voice chatbot initialized. Press Ctrl+C to exit.")
+    print("Chatbot initialized with test speech components. Type 'quit' to exit.")
+    print("Type 'voice' to test STT or 'text' for keyboard input.")
     
     try:
         while True:
-            # Get voice input
-            user_message = chat_manager.process_voice_input()
-            print(f"You said: {user_message.content}")
-
-            # Generate and play response
-            response = chat_manager.generate_response(user_message)
-            print(f"Assistant: {response.content}")
+            # Get input mode
+            mode = input("\nInput mode (voice/text/quit): ").strip().lower()
             
-            # Audio response is automatically played by Azure SDK
+            if mode == 'quit':
+                break
+            
+            if mode == 'voice':
+                # Use STT
+                print("Simulating voice input...")
+                transcribed = stt.transcribe_audio()
+                print(f"Transcribed: {transcribed}")
+                response = chat_manager.get_response(transcribed)
+            elif mode == 'text':
+                # Get text input
+                user_input = input("\nYou: ").strip()
+                if user_input:
+                    response = chat_manager.get_response(user_input)
+            else:
+                print("Invalid mode. Please choose 'voice', 'text', or 'quit'")
+                continue
+                
+            # Show response
+            print(f"\nAssistant: {response['text']}")
+            if 'audio_path' in response:
+                print(f"Audio response generated at: {response['audio_path']}")
 
     except KeyboardInterrupt:
         print("\nExiting...")

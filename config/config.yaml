@@ -7,9 +7,10 @@ llm:
 speech:
   tts:
     provider: "azure"
-    region: "your_region"
+    region: "eastasia"
     key: "${AZURE_SPEECH_KEY}"
-    voice_name: "en-US-JennyNeural"
+    voice_name: "en-US-AshleyNeural"
+    pitch: 1.26
   
   stt:
     provider: "azure"
